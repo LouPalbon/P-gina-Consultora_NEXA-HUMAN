@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexa Human — Human Potential. Future Ready.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0A1A30;
+    --ink-2:#102544;
+    --paper:#FAF8F4;
+    --paper-2:#F1EEE7;
+    --mist:#E7E4DC;
+    --graphite:#5B6472;
+    --graphite-soft:#8B92A0;
+    --teal:#1AAE9F;
+    --teal-soft:#BFE8E1;
+    --violet:#7C6FF0;
+    --violet-soft:#D9D4FB;
+    --line:rgba(10,26,48,0.12);
+    --line-on-ink:rgba(255,255,255,0.16);
+    --display:'Fraunces', serif;
+    --body:'Inter', sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+    --ease:cubic-bezier(.22,.68,.16,1);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--body);
+    color:var(--ink);
+    background:var(--paper);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img,svg{display:block; max-width:100%;}
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; cursor:pointer; border:none; background:none;}
+  ul{list-style:none;}
+
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--teal);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{
+    content:'';
+    width:22px; height:1px;
+    background:var(--teal);
+  }
+
+  h1,h2,h3{
+    font-family:var(--display);
+    font-weight:500;
+    letter-spacing:-0.01em;
+  }
+
+  .reveal{
+    opacity:0;
+    transform:translateY(28px);
+    transition:opacity .9s var(--ease), transform .9s var(--ease);
+  }
+  .reveal.is-visible{ opacity:1; transform:translateY(0); }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .reveal{opacity:1; transform:none; transition:none;}
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
+  /* ---------- NAV ---------- */
+  .nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    padding:22px 0;
+    transition:background .45s var(--ease), padding .45s var(--ease), border-color .45s var(--ease);
+    border-bottom:1px solid transparent;
+  }
+  .nav.is-scrolled{
+    background:rgba(250,248,244,0.92);
+    backdrop-filter:blur(10px);
+    padding:14px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .nav__inner{
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .nav__mark{
+    font-family:var(--display);
+    font-size:19px;
+    letter-spacing:0.01em;
+    color:#fff;
+    transition:color .45s var(--ease);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .nav.is-scrolled .nav__mark{ color:var(--ink); }
+  .nav__mark span{
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:.1em;
+    color:var(--teal);
+    text-transform:uppercase;
+  }
+  .nav__links{
+    display:flex; gap:34px;
+    font-size:14px;
+    color:rgba(255,255,255,0.78);
+    transition:color .45s var(--ease);
+  }
+  .nav.is-scrolled .nav__links{ color:var(--graphite); }
+  .nav__links a{ position:relative; }
+  .nav__links a::after{
+    content:''; position:absolute; left:0; bottom:-6px; width:0; height:1px; background:currentColor;
+    transition:width .35s var(--ease);
+  }
+  .nav__links a:hover::after{ width:100%; }
+  .nav__cta{
+    font-size:13px;
+    font-family:var(--mono);
+    letter-spacing:.04em;
+    padding:10px 20px;
+    border:1px solid rgba(255,255,255,0.45);
+    border-radius:2px;
+    color:#fff;
+    transition:all .35s var(--ease);
+  }
+  .nav.is-scrolled .nav__cta{ border-color:var(--ink); color:var(--ink); }
+  .nav__cta:hover{ background:var(--teal); border-color:var(--teal); color:#fff; }
+  .nav__toggle{ display:none; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    background:linear-gradient(165deg, var(--ink) 0%, var(--ink-2) 55%, #0c2040 100%);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    overflow:hidden;
+    padding-top:120px;
+    padding-bottom:90px;
+  }
+  .hero__orbs{
+    position:absolute; inset:0; z-index:0; pointer-events:none;
+  }
+  .orb{
+    position:absolute; border-radius:50%;
+    filter:blur(60px);
+    opacity:0.55;
+  }
+  .orb--human{
+    width:420px; height:420px;
+    background:radial-gradient(circle at 35% 35%, var(--teal), transparent 70%);
+    top:8%; right:8%;
+    animation:driftA 22s ease-in-out infinite;
+  }
+  .orb--ai{
+    width:380px; height:380px;
+    background:radial-gradient(circle at 60% 40%, var(--violet), transparent 70%);
+    top:30%; right:26%;
+    animation:driftB 26s ease-in-out infinite;
+  }
+  @keyframes driftA{
+    0%,100%{ transform:translate(0,0); }
+    50%{ transform:translate(-40px, 30px); }
+  }
+  @keyframes driftB{
+    0%,100%{ transform:translate(0,0); }
+    50%{ transform:translate(30px, -24px); }
+  }
+  .hero__grid{
+    position:absolute; inset:0; z-index:0;
+    background-image:linear-gradient(var(--line-on-ink) 1px, transparent 1px), linear-gradient(90deg, var(--line-on-ink) 1px, transparent 1px);
+    background-size:64px 64px;
+    mask-image:linear-gradient(to bottom, transparent, rgba(0,0,0,0.5) 30%, transparent 85%);
+    opacity:0.5;
+  }
+  .hero__content{ position:relative; z-index:2; max-width:760px; }
+  .hero h1{
+    font-size:clamp(38px, 5.4vw, 66px);
+    line-height:1.08;
+    font-weight:500;
+    color:#fff;
+  }
+  .hero h1 em{
+    font-style:italic;
+    color:var(--teal-soft);
+    font-weight:400;
+  }
+  .hero__sub{
+    margin-top:26px;
+    font-size:18px;
+    line-height:1.65;
+    color:rgba(255,255,255,0.72);
+    max-width:560px;
+  }
+  .hero__actions{
+    margin-top:42px;
+    display:flex; gap:18px; flex-wrap:wrap;
+  }
+  .btn{
+    font-family:var(--mono);
+    font-size:13px;
+    letter-spacing:.04em;
+    padding:15px 28px;
+    border-radius:2px;
+    display:inline-flex; align-items:center; gap:10px;
+    transition:all .35s var(--ease);
+    border:1px solid transparent;
+  }
+  .btn--primary{ background:var(--teal); color:#06231f; }
+  .btn--primary:hover{ background:#16998c; transform:translateY(-2px); }
+  .btn--ghost{ border-color:rgba(255,255,255,0.4); color:#fff; }
+  .btn--ghost:hover{ border-color:#fff; background:rgba(255,255,255,0.06); transform:translateY(-2px); }
+  .btn--dark{ border-color:var(--ink); color:var(--ink); }
+  .btn--dark:hover{ background:var(--ink); color:#fff; transform:translateY(-2px); }
+  .btn svg{ width:14px; height:14px; }
+
+  .hero__foot{
+    position:absolute; left:0; right:0; bottom:34px; z-index:2;
+  }
+  .hero__foot .wrap{
+    display:flex; justify-content:space-between; align-items:center;
+    font-family:var(--mono); font-size:11px; letter-spacing:.08em;
+    color:rgba(255,255,255,0.42); text-transform:uppercase;
+  }
+
+  /* ---------- SECTION GENERAL ---------- */
+  .section{ padding:120px 0; }
+  .section--tight{ padding:100px 0; }
+  .section-head{
+    max-width:640px;
+    margin-bottom:60px;
+  }
+  .section-head h2{
+    font-size:clamp(28px, 3.4vw, 42px);
+    color:var(--ink);
+    line-height:1.18;
+  }
+  .section-head p{
+    margin-top:18px;
+    font-size:17px;
+    color:var(--graphite);
+    line-height:1.7;
+  }
+
+  /* ---------- ABOUT ---------- */
+  .about{ background:var(--paper); }
+  .about__grid{
+    display:grid;
+    grid-template-columns:1fr 0.85fr;
+    gap:80px;
+    align-items:start;
+  }
+  .about__lead{
+    font-family:var(--display);
+    font-size:clamp(24px, 2.6vw, 32px);
+    font-weight:400;
+    line-height:1.4;
+    color:var(--ink);
+  }
+  .about__body p{
+    color:var(--graphite);
+    font-size:16px;
+    line-height:1.8;
+    margin-top:22px;
+  }
+  .about__stats{
+    border-left:1px solid var(--line);
+    padding-left:40px;
+    display:flex; flex-direction:column; gap:36px;
+  }
+  .stat{}
+  .stat__num{
+    font-family:var(--display);
+    font-style:italic;
+    font-size:40px;
+    color:var(--teal);
+  }
+  .stat__label{
+    margin-top:8px;
+    font-size:14px;
+    color:var(--graphite);
+    line-height:1.5;
+  }
+
+  /* ---------- SERVICES ---------- */
+  .services{ background:var(--paper-2); }
+  .services__grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .service-card{
+    background:var(--paper-2);
+    padding:42px 36px;
+    transition:background .4s var(--ease);
+  }
+  .service-card:hover{ background:var(--paper); }
+  .service-card__glyph{
+    font-family:var(--mono);
+    font-size:13px;
+    letter-spacing:.04em;
+    color:var(--violet);
+    width:46px; height:46px;
+    border:1px solid var(--line);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:28px;
+    background:var(--paper);
+  }
+  .service-card h3{
+    font-size:20px;
+    font-weight:500;
+    color:var(--ink);
+    margin-bottom:12px;
+    line-height:1.3;
+  }
+  .service-card p{
+    font-size:14.5px;
+    color:var(--graphite);
+    line-height:1.7;
+  }
+
+  /* ---------- METHODOLOGY ---------- */
+  .method{ background:var(--ink); color:#fff; position:relative; overflow:hidden; }
+  .method .section-head h2{ color:#fff; }
+  .method .section-head p{ color:rgba(255,255,255,0.62); }
+  .method .eyebrow{ color:var(--teal-soft); }
+  .method .eyebrow::before{ background:var(--teal-soft); }
+
+  .method__flow{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:0;
+    margin-top:20px;
+    position:relative;
+  }
+  .method__step{
+    padding:34px 28px 0 0;
+    border-top:1px solid var(--line-on-ink);
+    position:relative;
+  }
+  .method__step:not(:last-child)::after{
+    content:'→';
+    position:absolute; right:-2px; top:34px;
+    color:rgba(255,255,255,0.25);
+    font-size:14px;
+  }
+  .method__orbits{
+    height:46px;
+    display:flex;
+    align-items:center;
+    margin-bottom:22px;
+    position:relative;
+  }
+  .method__dot{
+    width:14px; height:14px; border-radius:50%;
+    position:absolute;
+  }
+  .method__dot--human{ background:var(--teal); box-shadow:0 0 18px rgba(26,174,159,0.7); }
+  .method__dot--ai{ background:var(--violet); box-shadow:0 0 18px rgba(124,111,240,0.7); }
+  /* gap between dots narrows across the four steps, visualizing human+AI convergence */
+  .method__step[data-stage="1"] .method__dot--human{ left:0; }
+  .method__step[data-stage="1"] .method__dot--ai{ left:64px; }
+  .method__step[data-stage="2"] .method__dot--human{ left:0; }
+  .method__step[data-stage="2"] .method__dot--ai{ left:42px; }
+  .method__step[data-stage="3"] .method__dot--human{ left:0; }
+  .method__step[data-stage="3"] .method__dot--ai{ left:22px; }
+  .method__step[data-stage="4"] .method__dot--human{ left:6px; }
+  .method__step[data-stage="4"] .method__dot--ai{ left:6px; opacity:0.6; }
+
+  .method__num{
+    font-family:var(--mono);
+    font-size:11px;
+    color:rgba(255,255,255,0.4);
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    margin-bottom:10px;
+  }
+  .method__step h3{
+    font-size:22px;
+    font-weight:500;
+    margin-bottom:10px;
+  }
+  .method__step p{
+    font-size:14px;
+    color:rgba(255,255,255,0.58);
+    line-height:1.7;
+    max-width:230px;
+  }
+  .method__note{
+    margin-top:54px;
+    font-size:15.5px;
+    color:rgba(255,255,255,0.66);
+    max-width:640px;
+    line-height:1.8;
+    border-top:1px solid var(--line-on-ink);
+    padding-top:30px;
+  }
+
+  /* ---------- TRENDS ---------- */
+  .trends{ background:var(--paper); }
+  .trends__layout{
+    display:grid;
+    grid-template-columns:0.8fr 1.2fr;
+    gap:80px;
+  }
+  .trends__list{ display:flex; flex-direction:column; }
+  .trend-row{
+    display:flex; align-items:baseline; gap:24px;
+    padding:22px 0;
+    border-top:1px solid var(--line);
+  }
+  .trend-row:last-child{ border-bottom:1px solid var(--line); }
+  .trend-row__year{
+    font-family:var(--mono); font-size:12px; color:var(--graphite-soft);
+    width:48px; flex-shrink:0;
+  }
+  .trend-row__title{
+    font-family:var(--display);
+    font-size:19px;
+    color:var(--ink);
+  }
+  .trends__visual{
+    background:var(--ink);
+    border-radius:4px;
+    padding:48px;
+    color:#fff;
+    display:flex; flex-direction:column; justify-content:center;
+  }
+  .trends__quote{
+    font-family:var(--display);
+    font-style:italic;
+    font-size:26px;
+    line-height:1.5;
+    color:var(--teal-soft);
+  }
+  .trends__quote-by{
+    margin-top:24px;
+    font-family:var(--mono);
+    font-size:12px;
+    color:rgba(255,255,255,0.5);
+    letter-spacing:.06em;
+    text-transform:uppercase;
+  }
+
+  /* ---------- TESTIMONIALS ---------- */
+  .testimonials{ background:var(--paper-2); }
+  .testi__grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:32px;
+  }
+  .testi-card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    padding:36px 32px;
+    border-radius:3px;
+  }
+  .testi-card__mark{
+    font-family:var(--display);
+    font-size:46px;
+    color:var(--teal-soft);
+    line-height:1;
+    margin-bottom:6px;
+  }
+  .testi-card p{
+    font-size:15px;
+    line-height:1.75;
+    color:var(--ink);
+  }
+  .testi-card__who{
+    margin-top:24px;
+    font-size:13px;
+    color:var(--graphite);
+  }
+  .testi-card__who strong{ color:var(--ink); display:block; font-weight:500; }
+
+  /* ---------- CTA FINAL ---------- */
+  .cta-final{
+    background:linear-gradient(135deg, var(--ink) 0%, #15305a 100%);
+    color:#fff;
+    text-align:center;
+    padding:140px 0;
+    position:relative;
+    overflow:hidden;
+  }
+  .cta-final::before{
+    content:'';
+    position:absolute; width:600px; height:600px; border-radius:50%;
+    background:radial-gradient(circle, rgba(26,174,159,0.18), transparent 70%);
+    top:-200px; left:50%; transform:translateX(-50%);
+  }
+  .cta-final__inner{ position:relative; z-index:2; max-width:640px; margin:0 auto; }
+  .cta-final h2{
+    font-size:clamp(30px, 4vw, 46px);
+    color:#fff;
+    line-height:1.2;
+  }
+  .cta-final p{
+    margin-top:20px;
+    font-size:17px;
+    color:rgba(255,255,255,0.68);
+    line-height:1.7;
+  }
+  .cta-final .hero__actions{ justify-content:center; margin-top:40px; }
+
+  /* ---------- FOOTER ---------- */
+  .footer{ background:var(--paper); padding:90px 0 36px; }
+  .footer__top{
+    display:grid;
+    grid-template-columns:1fr 1fr 1.3fr;
+    gap:60px;
+    padding-bottom:70px;
+    border-bottom:1px solid var(--line);
+  }
+  .footer__brand h3{
+    font-size:24px;
+    font-weight:500;
+    color:var(--ink);
+  }
+  .footer__brand p{
+    margin-top:10px;
+    font-size:13.5px;
+    color:var(--graphite);
+    font-family:var(--mono);
+    letter-spacing:.02em;
+  }
+  .footer__social{
+    margin-top:28px;
+    display:flex; gap:20px;
+    font-size:13px;
+  }
+  .footer__social a{ color:var(--graphite); border-bottom:1px solid transparent; transition:.3s; }
+  .footer__social a:hover{ color:var(--teal); border-color:var(--teal); }
+
+  .footer__nav h4, .footer__form h4{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--graphite-soft);
+    margin-bottom:20px;
+  }
+  .footer__nav ul{ display:flex; flex-direction:column; gap:13px; }
+  .footer__nav a{ font-size:14.5px; color:var(--ink); }
+  .footer__nav a:hover{ color:var(--teal); }
+
+  .form-row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+  .field{ display:flex; flex-direction:column; gap:6px; }
+  .field--full{ grid-column:1/-1; }
+  .field label{ font-size:11px; font-family:var(--mono); color:var(--graphite-soft); letter-spacing:.04em; }
+  .field input, .field textarea{
+    border:none; border-bottom:1px solid var(--line);
+    background:transparent;
+    padding:9px 2px;
+    font-family:var(--body); font-size:14.5px; color:var(--ink);
+    transition:border-color .3s;
+  }
+  .field input:focus, .field textarea:focus{ outline:none; border-color:var(--teal); }
+  .field textarea{ resize:vertical; min-height:64px; }
+  .footer__form button{
+    margin-top:6px;
+    background:var(--ink); color:#fff;
+    font-family:var(--mono); font-size:13px; letter-spacing:.04em;
+    padding:13px 26px; border-radius:2px;
+    transition:background .3s;
+  }
+  .footer__form button:hover{ background:var(--teal); }
+  .form-msg{ margin-top:14px; font-size:13px; color:var(--teal); display:none; }
+  .form-msg.is-shown{ display:block; }
+
+  .footer__bottom{
+    margin-top:34px;
+    display:flex; justify-content:space-between; align-items:center;
+    font-family:var(--mono); font-size:11.5px; color:var(--graphite-soft);
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 980px){
+    .about__grid{ grid-template-columns:1fr; gap:50px; }
+    .about__stats{ border-left:none; border-top:1px solid var(--line); padding-left:0; padding-top:34px; flex-direction:row; flex-wrap:wrap; gap:40px;}
+    .services__grid{ grid-template-columns:repeat(2, 1fr); }
+    .method__flow{ grid-template-columns:1fr 1fr; row-gap:40px; }
+    .method__step:nth-child(2)::after{ display:none; }
+    .trends__layout{ grid-template-columns:1fr; gap:44px; }
+    .testi__grid{ grid-template-columns:1fr; }
+    .footer__top{ grid-template-columns:1fr; gap:44px; }
+  }
+  @media (max-width: 640px){
+    .wrap{ padding:0 22px; }
+    .nav__links{ display:none; }
+    .section{ padding:80px 0; }
+    .services__grid{ grid-template-columns:1fr; }
+    .method__flow{ grid-template-columns:1fr; }
+    .method__step::after{ display:none !important; }
+    .form-row{ grid-template-columns:1fr; }
+    .hero__foot .wrap{ flex-direction:column; align-items:flex-start; gap:6px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="wrap nav__inner">
+    <a href="#top" class="nav__mark">Nexa Human <span>Human + AI</span></a>
+    <div class="nav__links">
+      <a href="#servicios">Servicios</a>
+      <a href="#metodologia">Metodología</a>
+      <a href="#tendencias">Tendencias 2030</a>
+      <a href="#testimonios">Clientes</a>
+    </div>
+    <a href="#contacto" class="nav__cta">Agenda una conversación</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="hero__grid"></div>
+  <div class="hero__orbs">
+    <div class="orb orb--human"></div>
+    <div class="orb orb--ai"></div>
+  </div>
+  <div class="wrap hero__content">
+    <div class="eyebrow" style="color:var(--teal-soft);">Nexa Human · Consultora de Transformación</div>
+    <h1>Transformamos personas, líderes y organizaciones para prosperar en la <em>era Human + AI.</em></h1>
+    <p class="hero__sub">Desarrollamos el talento, liderazgo y capacidades que las organizaciones necesitan para construir el futuro.</p>
+    <div class="hero__actions">
+      <a href="#servicios" class="btn btn--primary">Conoce nuestros servicios</a>
+      <a href="#contacto" class="btn btn--ghost">Agenda una conversación</a>
+    </div>
+  </div>
+  <div class="hero__foot">
+    <div class="wrap">
+      <span>Human Potential. Future Ready.</span>
+      <span>Latinoamérica · Consultoría en Liderazgo y Talento</span>
+    </div>
+  </div>
+</header>
+
+<section class="about section" id="nosotros">
+  <div class="wrap about__grid">
+    <div>
+      <div class="eyebrow">Sobre nosotros</div>
+      <p class="about__lead">Impulsamos el potencial humano para crear organizaciones extraordinarias.</p>
+      <div class="about__body">
+        <p>En Nexa Human creemos que el futuro pertenece a las organizaciones que logran combinar lo mejor de las personas con el poder de la tecnología.</p>
+        <p>Diseñamos experiencias de aprendizaje, liderazgo y transformación que generan impacto sostenible en los resultados del negocio y en la vida de las personas.</p>
+      </div>
+    </div>
+    <div class="about__stats">
+      <div class="stat">
+        <div class="stat__num">+120</div>
+        <div class="stat__label">Organizaciones acompañadas en procesos de transformación de liderazgo y cultura.</div>
+      </div>
+      <div class="stat">
+        <div class="stat__num">9</div>
+        <div class="stat__label">Países de Latinoamérica donde operan nuestros programas.</div>
+      </div>
+      <div class="stat">
+        <div class="stat__num">2030</div>
+        <div class="stat__label">Horizonte de las capacidades que diseñamos hoy: liderazgo, IA y aprendizaje continuo.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="services section" id="servicios">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Nuestros servicios</div>
+      <h2>Capacidades para liderar la próxima década.</h2>
+      <p>Seis líneas de intervención diseñadas para desarrollar personas, equipos y organizaciones listas para el futuro.</p>
+    </div>
+  </div>
+  <div class="wrap" style="padding:0;">
+    <div class="services__grid">
+      <div class="service-card reveal">
+        <div class="service-card__glyph">LP</div>
+        <h3>Liderazgo con Propósito</h3>
+        <p>Programas para desarrollar líderes capaces de inspirar, movilizar y generar impacto.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-card__glyph">L&amp;D</div>
+        <h3>Learning &amp; Development</h3>
+        <p>Diseño de academias corporativas, rutas de aprendizaje y programas de desarrollo.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-card__glyph">CE</div>
+        <h3>Cultura y Engagement</h3>
+        <p>Transformación cultural, experiencia del colaborador y fortalecimiento del compromiso organizacional.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-card__glyph">H+AI</div>
+        <h3>Human + AI Transformation</h3>
+        <p>Preparación de líderes y equipos para integrar la inteligencia artificial de manera efectiva y humana.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-card__glyph">GT</div>
+        <h3>Gestión del Talento</h3>
+        <p>Planes de carrera, sucesión, assessment y desarrollo de capacidades futuras.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-card__glyph">CX</div>
+        <h3>Coaching Ejecutivo</h3>
+        <p>Acompañamiento personalizado para líderes y profesionales en crecimiento.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="method section" id="metodologia">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Nuestra metodología</div>
+      <h2>De la mirada humana a la integración con IA.</h2>
+      <p>Cada intervención se adapta a la realidad de la organización y combina estrategia, desarrollo humano, aprendizaje y medición de impacto. Los dos puntos representan a las personas y a la inteligencia artificial: la distancia entre ellos se acorta en cada etapa, hasta operar de forma integrada.</p>
+    </div>
+    <div class="method__flow">
+      <div class="method__step" data-stage="1">
+        <div class="method__orbits">
+          <div class="method__dot method__dot--human"></div>
+          <div class="method__dot method__dot--ai"></div>
+        </div>
+        <div class="method__num">Etapa 01</div>
+        <h3>Diagnosticar</h3>
+        <p>Entendemos la realidad de la organización, sus personas y su madurez frente al cambio.</p>
+      </div>
+      <div class="method__step" data-stage="2">
+        <div class="method__orbits">
+          <div class="method__dot method__dot--human"></div>
+          <div class="method__dot method__dot--ai"></div>
+        </div>
+        <div class="method__num">Etapa 02</div>
+        <h3>Diseñar</h3>
+        <p>Construimos la solución a medida: liderazgo, cultura, talento o capacidades Human + AI.</p>
+      </div>
+      <div class="method__step" data-stage="3">
+        <div class="method__orbits">
+          <div class="method__dot method__dot--human"></div>
+          <div class="method__dot method__dot--ai"></div>
+        </div>
+        <div class="method__num">Etapa 03</div>
+        <h3>Transformar</h3>
+        <p>Activamos el programa con líderes, equipos y procesos, generando cambios visibles.</p>
+      </div>
+      <div class="method__step" data-stage="4">
+        <div class="method__orbits">
+          <div class="method__dot method__dot--human"></div>
+          <div class="method__dot method__dot--ai"></div>
+        </div>
+        <div class="method__num">Etapa 04</div>
+        <h3>Sostener</h3>
+        <p>Medimos el impacto y consolidamos las nuevas formas de trabajar, humanas y aumentadas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="trends section" id="tendencias">
+  <div class="wrap">
+    <div class="section-head" style="margin-bottom:50px;">
+      <div class="eyebrow">Tendencias 2030</div>
+      <h2>Preparando hoy a los líderes del mañana.</h2>
+    </div>
+    <div class="trends__layout">
+      <div class="trends__list">
+        <div class="trend-row"><span class="trend-row__year">01</span><span class="trend-row__title">Human + AI</span></div>
+        <div class="trend-row"><span class="trend-row__year">02</span><span class="trend-row__title">Liderazgo adaptativo</span></div>
+        <div class="trend-row"><span class="trend-row__year">03</span><span class="trend-row__title">Inteligencia emocional</span></div>
+        <div class="trend-row"><span class="trend-row__year">04</span><span class="trend-row__title">Pensamiento crítico</span></div>
+        <div class="trend-row"><span class="trend-row__year">05</span><span class="trend-row__title">Reskilling y Upskilling</span></div>
+        <div class="trend-row"><span class="trend-row__year">06</span><span class="trend-row__title">Cultura de aprendizaje continuo</span></div>
+        <div class="trend-row"><span class="trend-row__year">07</span><span class="trend-row__title">Future Skills</span></div>
+      </div>
+      <div class="trends__visual reveal">
+        <p class="trends__quote">"La tecnología transforma los negocios, pero son las personas quienes transforman el futuro."</p>
+        <div class="trends__quote-by">Nexa Human — Filosofía de trabajo</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials section" id="testimonios">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Lo que dicen nuestros clientes</div>
+      <h2>Organizaciones que ya están construyendo su futuro.</h2>
+    </div>
+    <div class="testi__grid">
+      <div class="testi-card reveal">
+        <div class="testi-card__mark">"</div>
+        <p>El programa de liderazgo transformó la forma en que nuestros gerentes toman decisiones y acompañan a sus equipos.</p>
+        <div class="testi-card__who"><strong>Directora de Capital Humano</strong>Industria de consumo masivo</div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="testi-card__mark">"</div>
+        <p>Nexa Human nos ayudó a preparar a la organización para integrar IA sin perder el foco en las personas.</p>
+        <div class="testi-card__who"><strong>VP de Talento y Cultura</strong>Sector financiero</div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="testi-card__mark">"</div>
+        <p>La metodología es clara, rigurosa y profundamente humana. Los resultados se vieron en pocos meses.</p>
+        <div class="testi-card__who"><strong>Gerente General</strong>Grupo de servicios profesionales</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-final">
+  <div class="wrap cta-final__inner">
+    <h2>¿Está tu organización preparada para el futuro?</h2>
+    <p>Conversemos sobre cómo desarrollar el talento, liderazgo y cultura que impulsarán los resultados de tu organización.</p>
+    <div class="hero__actions">
+      <a href="#contacto" class="btn btn--primary">Agenda una reunión</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer" id="contacto">
+  <div class="wrap">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <h3>Nexa Human</h3>
+        <p>Connecting People, Purpose and AI</p>
+        <div class="footer__social">
+          <a href="#">LinkedIn</a>
+          <a href="#">Instagram</a>
+          <a href="#">YouTube</a>
+        </div>
+      </div>
+      <div class="footer__nav">
+        <h4>Navegación</h4>
+        <ul>
+          <li><a href="#nosotros">Sobre nosotros</a></li>
+          <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#metodologia">Metodología</a></li>
+          <li><a href="#tendencias">Tendencias 2030</a></li>
+          <li><a href="#testimonios">Clientes</a></li>
+        </ul>
+      </div>
+      <div class="footer__form">
+        <h4>Hablemos</h4>
+        <form id="contactForm">
+          <div class="form-row">
+            <div class="field"><label for="f-nombre">Nombre</label><input id="f-nombre" type="text" required></div>
+            <div class="field"><label for="f-empresa">Empresa</label><input id="f-empresa" type="text" required></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label for="f-cargo">Cargo</label><input id="f-cargo" type="text"></div>
+            <div class="field"><label for="f-correo">Correo</label><input id="f-correo" type="email" required></div>
+          </div>
+          <div class="form-row">
+            <div class="field field--full"><label for="f-mensaje">Mensaje</label><textarea id="f-mensaje" rows="3"></textarea></div>
+          </div>
+          <button type="submit">Enviar mensaje</button>
+          <p class="form-msg" id="formMsg">Gracias — recibimos tu mensaje y te contactaremos pronto.</p>
+        </form>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2026 Nexa Human</span>
+      <span>Human Potential. Future Ready.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll state
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('is-scrolled', window.scrollY > 40);
+  });
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // Contact form (no backend — confirms locally)
+  const form = document.getElementById('contactForm');
+  const msg = document.getElementById('formMsg');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    msg.classList.add('is-shown');
+    form.reset();
+  });
+</script>
+
+</body>
+</html>
